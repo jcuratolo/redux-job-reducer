@@ -65,6 +65,7 @@ function awaitRequest(name) {
 // Handle the jobs slice of state
 function jobsReducer(state = {ready: {}, inProgress: {}, done: {}}, {type, data}) {
   switch (type) {
+    // Add new job to ready object by name
     case 'job.new':
       var job = data
       var name = data.name
@@ -73,6 +74,7 @@ function jobsReducer(state = {ready: {}, inProgress: {}, done: {}}, {type, data}
         .set(`ready.${name}`, job)
         .value()
 
+    // Move job to inProgress object
     case 'job.start':
       return _.chain(state)
         .cloneDeep()
@@ -81,7 +83,8 @@ function jobsReducer(state = {ready: {}, inProgress: {}, done: {}}, {type, data}
           delete state.ready[data.name]
         })
         .value()
-
+    
+    // Move job to done object, provide results
     case 'job.done':
       return _.chain(state)
         .cloneDeep()
